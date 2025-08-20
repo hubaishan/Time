@@ -21,7 +21,7 @@ class YearMonthTimeParser extends StringValueParser {
 	private const FORMAT_NAME = 'year-month';
 
 	/**
-	 * @var int[] Array mapping localized month names to month numbers (1 to 12).
+	 * @var array[] Array mapping localized month names to month numbers (1 to 12).
 	 */
 	private $monthNumbers;
 
@@ -50,7 +50,7 @@ class YearMonthTimeParser extends StringValueParser {
 		parent::__construct( $options );
 
 		$languageCode = $this->getOption( ValueParser::OPT_LANG );
-		$this->monthNumbers = $monthNameProvider->getMonthNumbers( $languageCode );
+		$this->monthNumbers = $monthNameProvider->getMonthNumbers( $languageCode, false );
 		$this->isoTimestampParser = new IsoTimestampParser( null, $this->options );
 		$this->eraParser = $eraParser ?: new EraParser();
 	}
@@ -84,16 +84,16 @@ class YearMonthTimeParser extends StringValueParser {
 				}
 			}
 		} elseif ( $aIsInt ) {
-			$month = $this->parseMonth( $b );
+			[ $month, $calendar ] = $this->parseMonth( $b );
 
 			if ( $month ) {
-				return $this->getTimeFromYearMonth( $sign . $a, $month );
+				return $this->getTimeFromYearMonth( $sign . $a, $month, $calendar );
 			}
 		} elseif ( $bIsInt ) {
-			$month = $this->parseMonth( $a );
+			[ $month, $calendar ] = $this->parseMonth( $a );
 
 			if ( $month ) {
-				return $this->getTimeFromYearMonth( $sign . $b, $month );
+				return $this->getTimeFromYearMonth( $sign . $b, $month, $calendar );
 			}
 		}
 
@@ -147,9 +147,11 @@ class YearMonthTimeParser extends StringValueParser {
 	 * @return int|null
 	 */
 	private function parseMonth( $month ) {
-		foreach ( $this->monthNumbers as $monthName => $i ) {
-			if ( strcasecmp( $monthName, $month ) === 0 ) {
-				return $i;
+		foreach ( $this->monthNumbers as $calendar => $calMonthNumbers ) {
+			foreach ( $calMonthNumbers as $monthName => $i ) {
+				if ( strcasecmp( $monthName, $month ) === 0 ) {
+					return [ $i, $calendar ];
+				}
 			}
 		}
 
@@ -162,12 +164,18 @@ class YearMonthTimeParser extends StringValueParser {
 	 *
 	 * @return TimeValue
 	 */
-	private function getTimeFromYearMonth( $year, $month ) {
+	private function getTimeFromYearMonth( $year, $month, $calendar = null ) {
 		if ( $year[0] !== '-' && $year[0] !== '+' ) {
 			$year = '+' . $year;
 		}
 
-		return $this->isoTimestampParser->parse( sprintf( '%s-%02s-00T00:00:00Z', $year, $month ) );
+		if ( $calendar === 0 || $calendar === null ) {
+			$calendar = '';
+		} else {
+			$calendar = ' ' . $calendar;
+		}
+
+		return $this->isoTimestampParser->parse( sprintf( '%s-%02s-00T00:00:00Z%s', $year, $month, $calendar ) );
 	}
 
 	/**

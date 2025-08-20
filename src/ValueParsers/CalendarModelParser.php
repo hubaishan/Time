@@ -33,7 +33,7 @@ class CalendarModelParser extends StringValueParser {
 	 *
 	 * TODO: How crucial is it that this regex is in sync with the list below?
 	 */
-	public const MODEL_PATTERN = '(Gregorian|Julian|)';
+	public const MODEL_PATTERN = '(Gregorian|Julian|Hijri|)';
 
 	/**
 	 * @param ParserOptions|null $options
@@ -61,6 +61,8 @@ class CalendarModelParser extends StringValueParser {
 				return TimeValue::CALENDAR_GREGORIAN;
 			case TimeValue::CALENDAR_JULIAN:
 				return TimeValue::CALENDAR_JULIAN;
+			case TimeValue::CALENDAR_HIJRI:
+				return TimeValue::CALENDAR_HIJRI;
 		}
 
 		return $this->getCalendarModelUriFromKey( $value );
@@ -84,6 +86,9 @@ class CalendarModelParser extends StringValueParser {
 				return TimeValue::CALENDAR_GREGORIAN;
 			case 'julian':
 				return TimeValue::CALENDAR_JULIAN;
+			case 'hijri':
+			case 'islamic':
+				return TimeValue::CALENDAR_HIJRI;
 		}
 
 		throw new ParseException( 'Cannot parse calendar model', $value, self::FORMAT_NAME );

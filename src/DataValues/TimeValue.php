@@ -122,6 +122,11 @@ class TimeValue extends DataValueObject {
 	public const CALENDAR_JULIAN = 'http://www.wikidata.org/entity/Q1985786';
 
 	/**
+	 * @since 1.3.0
+	 */
+	public const CALENDAR_HIJRI = 'http://www.wikidata.org/entity/Q28892';
+
+	/**
 	 * Timestamp describing a point in time. The actual format depends on the calendar model.
 	 *
 	 * Gregorian and Julian dates use the same YMD ordered format, resembling ISO 8601, e.g.
