@@ -144,7 +144,7 @@ class YearMonthTimeParser extends StringValueParser {
 	/**
 	 * @param string $month
 	 *
-	 * @return int|null
+	 * @return array( int|null $monthNumber, string|null $calendar ) 
 	 */
 	private function parseMonth( $month ) {
 		foreach ( $this->monthNumbers as $calendar => $calMonthNumbers ) {
@@ -155,7 +155,7 @@ class YearMonthTimeParser extends StringValueParser {
 			}
 		}
 
-		return null;
+		return [ null, null ];
 	}
 
 	/**

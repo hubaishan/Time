@@ -29,7 +29,7 @@ class MonolingualMonthNameProvider implements MonthNameProvider {
 	 *
 	 * @return string[] Array mapping month numbers (1 to 12) to localized month names.
 	 */
-	public function getLocalizedMonthNames( $languageCode ) {
+	public function getLocalizedMonthNames( $languageCode, $calendar = null ) {
 		return $this->monthNames;
 	}
 
@@ -38,8 +38,12 @@ class MonolingualMonthNameProvider implements MonthNameProvider {
 	 *
 	 * @return int[] Array mapping localized month names to month numbers (1 to 12).
 	 */
-	public function getMonthNumbers( $languageCode ) {
-		return array_flip( $this->monthNames );
+	public function getMonthNumbers( $languageCode, $merged = true ) {
+		if ( $merged ) {
+			return array_flip( $this->monthNames );
+		} else {
+			return [ 0 => array_flip( $this->monthNames )];
+		}
 	}
 
 }

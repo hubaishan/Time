@@ -34,51 +34,60 @@ class MonthNameUnlocalizerTest extends TestCase {
 	public function localizedDateProvider() {
 		return array(
 			// No replacements given
-			array( '', '', array() ),
-			array( 'Jul', 'Jul', array() ),
+			array( '', [ '', null ], array( 0 => array() ) ),
+			array( 'Jul', [ 'Jul', null ], array( 0 => array() ) ),
 
 			// Longer strings do have higher priority
-			array( 'Juli', 'July', array(
-				'Jul' => 'bad',
-				'Juli' => 'July',
-			) ),
-			array( 'Juli', 'July', array(
-				'Juli' => 'July',
-				'Jul' => 'bad',
-			) ),
+			array( 'Juli', [ 'July', null ], array(
+				0 => array(
+					'Jul' => 'bad',
+					'Juli' => 'July',
+			) ) ),
+			array( 'Juli', [ 'July', null ], array(
+				0 => array(
+					'Juli' => 'July',
+					'Jul' => 'bad',
+			) ) ),
 
 			// Do not mess with strings that are clearly not a valid date.
-			array( 'July July', 'July July', array(
-				'July' => 'bad',
-			) ),
+			array( 'July July', [ 'July July', null ], array(
+				0 => array(
+					'July' => 'bad',
+			) ) ),
 
 			// Do not mess with already unlocalized month names.
-			array( 'July', 'July', array(
-				'Jul' => 'July',
-			) ),
+			array( 'July', [ 'July', null ], array(
+				0 => array(
+					'Jul' => 'July',
+			) ) ),
 
 			// But shortening is ok even if a substring looks like it's already unlocalized.
-			array( 'July', 'Jul', array(
-				'July' => 'Jul',
-			) ),
+			array( 'July', [ 'Jul', null ], array(
+				0 => array(
+					'July' => 'Jul',
+			) ) ),
 
 			// Word boundaries currently do not prevent unlocalization on purpose.
-			array( '1Jul2015', '1July2015', array(
-				'Jul' => 'July',
-			) ),
-			array( '1stJulLastYear', '1stJulyLastYear', array(
-				'Jul' => 'July',
-			) ),
+			array( '1Jul2015', [ '1July2015', null ], array(
+				0 => array(
+					'Jul' => 'July',
+			) ) ),
+			array( '1stJulLastYear', [ '1stJulyLastYear', null ], array(
+				0 => array(
+					'Jul' => 'July',
+			) ) ),
 
 			// Capitalization is currently significant. This may need to depend on the languages.
-			array( 'jul', 'jul', array(
-				'Jul' => 'bad',
-			) ),
+			array( 'jul', [ 'jul', null ], array(
+				0 => array(
+					'Jul' => 'bad',
+			) ) ),
 
 			// Some translations (e.g. ko) just repeat the number of the month
-			array( '2000', '2000', array(
-				'2' => 'February',
-			) ),
+			array( '2000', [ '2000', null ], array(
+				0 => array(
+					'2' => 'February',
+			) ) ),
 		);
 	}
 

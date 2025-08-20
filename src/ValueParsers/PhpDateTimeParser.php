@@ -80,7 +80,7 @@ class PhpDateTimeParser extends StringValueParser {
 			[ $sign, $value ] = $this->eraParser->parse( $value );
 
 			$value = trim( $value );
-			$value = $this->monthNameUnlocalizer->unlocalize( $value );
+			[ $value, $calendar ] = $this->monthNameUnlocalizer->unlocalize( $value );
 			$year = $this->fetchAndNormalizeYear( $value );
 
 			$value = $this->getValueWithFixedSeparators( $value, $year );
@@ -109,7 +109,7 @@ class PhpDateTimeParser extends StringValueParser {
 			}
 
 			// Use a common base parser for precision detection and option handling.
-			return $this->isoTimestampParser->parse( $timestamp );
+			return $this->isoTimestampParser->parse( $timestamp  . ( $calendar? ' ' . $calendar: '' ) );
 		} catch ( Exception $exception ) {
 			throw new ParseException( $exception->getMessage(), $rawValue, self::FORMAT_NAME );
 		}

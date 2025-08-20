@@ -15,17 +15,19 @@ interface MonthNameProvider {
 
 	/**
 	 * @param string $languageCode
+	 * @param string|null $calendar Optional calendar name to localize month names for a specific calendar.
 	 *
 	 * @return string[] Array mapping month numbers (1 to 12) to localized month names.
 	 */
-	public function getLocalizedMonthNames( $languageCode );
+	public function getLocalizedMonthNames( $languageCode, $calendar = null );
 
 	/**
 	 * @param string $languageCode
+	 * @param bool $merged Whether to merge the month names from different calendars
 	 *
-	 * @return int[] Array mapping localized month names (possibly including full month names,
+	 * @return array[] Array mapping localized month names (possibly including full month names,
 	 * genitive names and abbreviations) to month numbers (1 to 12).
 	 */
-	public function getMonthNumbers( $languageCode );
+	public function getMonthNumbers( $languageCode, $merged = true);
 
 }
